@@ -1,0 +1,82 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Lista de Tareas</h5>
+  </div>
+  <div class="card-body">
+    <!-- Filtros y búsqueda -->
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="filtroCompletada" class="form-label">Filtrar por estado:</label>
+        <select id="filtroCompletada" class="form-select" [(ngModel)]="filtroCompletada" (change)="onFilterChange()">
+          <option [ngValue]="null">Todas</option>
+          <option [ngValue]="false">Pendientes</option>
+          <option [ngValue]="true">Completadas</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="ordenamiento" class="form-label">Ordenar por:</label>
+        <select id="ordenamiento" class="form-select" [(ngModel)]="ordenamiento" (change)="onOrderChange()">
+          <option value="fechaCreacion">Fecha de creación</option>
+          <option value="fechalimite">Fecha límite</option>
+          <option value="prioridad">Prioridad</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="busqueda" class="form-label">Buscar:</label>
+        <input id="busqueda" type="text" class="form-control" 
+               [(ngModel)]="busqueda" 
+               (input)="onSearchChange()"
+               placeholder="Buscar por título o descripción">
+      </div>
+    </div>
+
+    <!-- Lista de tareas -->
+    <div class="row">
+      <div class="col-12">
+        <div *ngIf="tareas.length === 0" class="alert alert-info">
+          No hay tareas para mostrar.
+        </div>
+        
+        <div *ngFor="let tarea of tareas" class="card mb-3" 
+             [ngClass]="{'border-success': tarea.completada, 'border-warning': !tarea.completada}">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-md-1">
+                <input type="checkbox" 
+                       class="form-check-input" 
+                       [checked]="tarea.completada"
+                       (change)="toggleCompletada(tarea)">
+              </div>
+              <div class="col-md-7">
+                <h6 class="card-title mb-1" [ngClass]="{'text-decoration-line-through': tarea.completada}">
+                  {{ tarea.titulo }}
+                </h6>
+                <p class="card-text mb-1" [ngClass]="{'text-muted': tarea.completada}">
+                  {{ tarea.descripcion }}
+                </p>
+                <small class="text-muted">
+                  Fecha límite: {{ tarea.fechaLimite | date:'dd/MM/yyyy' }}
+                </small>
+              </div>
+              <div class="col-md-2">
+                <span [ngClass]="getPrioridadClass(tarea.prioridad)">
+                  {{ getPrioridadText(tarea.prioridad) }}
+                </span>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-sm btn-outline-primary me-2" 
+                        (click)="onEditTarea(tarea)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" 
+                        (click)="deleteTarea(tarea.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

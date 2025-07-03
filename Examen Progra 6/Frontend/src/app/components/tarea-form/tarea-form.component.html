@@ -1,0 +1,85 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">
+      {{ isEditing ? 'Editar Tarea' : 'Nueva Tarea' }}
+    </h5>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="tareaForm" (ngSubmit)="onSubmit()">
+      <!-- Título -->
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título <span class="text-danger">*</span></label>
+        <input type="text" 
+               id="titulo" 
+               class="form-control" 
+               formControlName="titulo"
+               [class.is-invalid]="titulo?.invalid && titulo?.touched"
+               placeholder="Ingresa el título de la tarea">
+        <div *ngIf="titulo?.invalid && titulo?.touched" class="invalid-feedback">
+          <div *ngIf="titulo?.errors?.['required']">El título es requerido</div>
+          <div *ngIf="titulo?.errors?.['maxlength']">El título no puede exceder 100 caracteres</div>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="mb-3">
+        <label for="descripcion" class="form-label">Descripción</label>
+        <textarea id="descripcion" 
+                  class="form-control" 
+                  formControlName="descripcion"
+                  [class.is-invalid]="descripcion?.invalid && descripcion?.touched"
+                  rows="3"
+                  placeholder="Describe la tarea (opcional)"></textarea>
+        <div *ngIf="descripcion?.invalid && descripcion?.touched" class="invalid-feedback">
+          <div *ngIf="descripcion?.errors?.['maxlength']">La descripción no puede exceder 500 caracteres</div>
+        </div>
+      </div>
+
+      <!-- Fecha límite -->
+      <div class="mb-3">
+        <label for="fechaLimite" class="form-label">Fecha límite <span class="text-danger">*</span></label>
+        <input type="date" 
+               id="fechaLimite" 
+               class="form-control" 
+               formControlName="fechaLimite"
+               [class.is-invalid]="fechaLimite?.invalid && fechaLimite?.touched">
+        <div *ngIf="fechaLimite?.invalid && fechaLimite?.touched" class="invalid-feedback">
+          <div *ngIf="fechaLimite?.errors?.['required']">La fecha límite es requerida</div>
+        </div>
+      </div>
+
+      <!-- Prioridad -->
+      <div class="mb-3">
+        <label for="prioridad" class="form-label">Prioridad <span class="text-danger">*</span></label>
+        <select id="prioridad" 
+                class="form-select" 
+                formControlName="prioridad"
+                [class.is-invalid]="prioridad?.invalid && prioridad?.touched">
+          <option value="1">Baja</option>
+          <option value="2">Media</option>
+          <option value="3">Alta</option>
+        </select>
+        <div *ngIf="prioridad?.invalid && prioridad?.touched" class="invalid-feedback">
+          <div *ngIf="prioridad?.errors?.['required']">La prioridad es requerida</div>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="d-grid gap-2">
+        <button type="submit" 
+                class="btn btn-primary" 
+                [disabled]="tareaForm.invalid">
+          <i class="fas fa-save me-2"></i>
+          {{ isEditing ? 'Actualizar Tarea' : 'Crear Tarea' }}
+        </button>
+        <button type="button" 
+                class="btn btn-secondary" 
+                (click)="cancelEdit()"
+                *ngIf="isEditing">
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
